@@ -62,8 +62,8 @@ jobs:
             with open(".github/upgrade-responder.json", "w") as f: json.dump(data, f, indent=2)
             '
         - name: Commit and push changes to neuvector
-          #env:
-            #GITHUB_TOKEN: ${{ secrets.GH_PAT  }}
+          env:
+            GITHUB_TOKEN: ${{ secrets.GH_PAT  }}
           run: |
             ls -la
             git config --global user.name "github-actions[bot]"
