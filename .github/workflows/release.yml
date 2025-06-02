@@ -48,22 +48,25 @@ jobs:
           uses: actions/setup-python@v5
           with:
             python-version: '3.11'
-        - name: Install dependencies
-          run: |
-            python -m pip install --upgrade pip
-            pip install json
+        #- name: Install dependencies
+          #run: |
+            #python -m pip install --upgrade pip
+            #pip install json
         - name: Test with pytest
           run: |
+            python -c '
             import json
             data = {"Versions": [{"Name": "v2.1.1", "ReleaseDate": "2022-05-13T01:31:29.99Z", "Tags": ["latest", "2.1.1"]}]}
             with open(".github/upgrade-responder.json", "w") as f: json.dump(data, f, indent=2)
+            '
         - name: Commit and push changes
           run: |
-            cp ./.github/upgrade-responder.json ./external-production/
+            ls -la
+            cp .github/upgrade-responder.json external-production/
             git add upgrade-responder.json
             git commit -m "Automated commit by GitHub Actions"
             git push
-            cd ./external-production/
+            cd external-production/
             git add upgrade-responder.json
             git commit -m "Automated commit by GitHub Actions"
             git push 
