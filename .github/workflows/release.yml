@@ -39,6 +39,8 @@ jobs:
       runs-on: ubuntu-latest
       permissions:
         contents: write
+      env:
+        TAG_FROM_PUBLISH: ${{ needs.publish.outputs.parsed_tag }}
       steps:
         - uses: actions/checkout@v4
         - name: Checkout external-production repository
@@ -59,8 +61,6 @@ jobs:
             python-version: '3.11'
         
         - name: Test with pytest
-          env:
-            TAG_FROM_PUBLISH: ${{ needs.publish.outputs.parsed_tag }}
           run: |
             python -c '
             import json, os
@@ -68,7 +68,7 @@ jobs:
             tag_value = os.environ.get("TAG_FROM_PUBLISH", "unknown")
             current_date = datetime.now(timezone.utc).isoformat(timespec="milliseconds")
             data = {"Versions": [{"Name": f"v{tag_value}", "ReleaseDate": current_date, "Tags": ["latest", tag_value]}]}
-            with open(".github/upgrade-responder.json", "w") as f: json.dump(data, f, indent=2)
+            with open(".github/upgrade-responder.json", "w") as f: json.dump(data, f, indent=2); f.write("\n")
             '
         
         - name: Set git config
@@ -77,9 +77,6 @@ jobs:
             git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
         - name: Commit and push changes to neuvector
-          env:
-            GITHUB_TOKEN: ${{ secrets.GH_PAT  }}
-            TAG_FROM_PUBLISH: ${{ needs.publish.outputs.parsed_tag }}
           run: |
             ls -la
             BRANCH_NAME="auto-update/upgrade-responder-$(date +%Y%m%d%H%M%S)"
@@ -93,7 +90,6 @@ jobs:
         - name: Commit and push changes to external-production
           env:
             GITHUB_TOKEN: ${{ secrets.GH_PAT  }}
-            TAG_FROM_PUBLISH: ${{ needs.publish.outputs.parsed_tag }}
           run: |
             BRANCH_NAME="auto-update/upgrade-responder-$(date +%Y%m%d%H%M%S)"
             echo "Creating and pushing branch: $BRANCH_NAME"
