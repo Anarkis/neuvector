@@ -82,6 +82,8 @@ jobs:
           env:
             GITHUB_TOKEN: ${{ secrets.GH_PAT  }}
           run: |
+            BRANCH_NAME="auto-update/upgrade-responder-$(date +%Y%m%d%H%M%S)"
+            echo "Creating and pushing branch: $BRANCH_NAME"
             ls -la
             ls -la .github/
             cp .github/upgrade-responder.json external-production/ 
