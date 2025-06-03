@@ -26,7 +26,9 @@ jobs:
       id: parse_tag_step
       run: |
         TARGET=${{ github.ref_name }}
-        echo "TAG=${TARGET#v}" >> $GITHUB_ENV
+        PARSED_TAG="${TARGET#v}"
+        
+        echo "TAG=${PARSED_TAG}" >> $GITHUB_ENV
         echo "tag_value=${PARSED_TAG}" >> $GITHUB_OUTPUT
 
     outputs:
