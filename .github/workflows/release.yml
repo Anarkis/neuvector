@@ -43,8 +43,8 @@ jobs:
             token: ${{ secrets.GH_PAT }}
             path: external-production
             sparse-checkout: |
-              manifests/upgrade-responder/resources/ConfigMap/upgrade-responder.json
-            sparse-checkout-cone-mode: false
+              manifests/upgrade-responder/resources/ConfigMap/
+            sparse-checkout-cone-mode: true
 
         - name: Set up Python
           uses: actions/setup-python@v5
