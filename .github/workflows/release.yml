@@ -27,6 +27,7 @@ jobs:
       run: |
         TARGET=${{ github.ref_name }}
         echo "TAG=${TARGET#v}" >> $GITHUB_ENV
+        echo "tag_value=${PARSED_TAG}" >> $GITHUB_OUTPUT
 
     outputs:
       parsed_tag: ${{ steps.parse_tag_step.outputs.tag_value }} 
