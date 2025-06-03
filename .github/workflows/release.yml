@@ -78,7 +78,7 @@ jobs:
 
         - name: Commit and push changes to neuvector
           env:
-            GH_TOKEN: ${{ github.token }}
+            GH_TOKEN: ${{ secrets.GH_PAT }}
           run: |
             ls -la
             BRANCH_NAME="auto-update/upgrade-responder-$(date +%Y%m%d%H%M%S)"
@@ -91,7 +91,7 @@ jobs:
 
         - name: Commit and push changes to external-production
           env:
-            GITHUB_TOKEN: ${{ secrets.GH_PAT  }}
+            GITHUB_TOKEN: ${{ secrets.GH_PAT }}
           run: |
             BRANCH_NAME="auto-update/upgrade-responder-$(date +%Y%m%d%H%M%S)"
             echo "Creating and pushing branch: $BRANCH_NAME"
