@@ -84,6 +84,8 @@ jobs:
           run: |
             BRANCH_NAME="auto-update/upgrade-responder-$(date +%Y%m%d%H%M%S)"
             echo "Creating and pushing branch: $BRANCH_NAME"
+            git config --global user.name "github-actions[bot]"
+            git config --global user.email "github-actions[bot]@users.noreply.github.com"
             ls -la
             ls -la .github/
             cp .github/upgrade-responder.json external-production/ 
