@@ -79,6 +79,7 @@ jobs:
         - name: Commit and push changes to neuvector
           env:
             GITHUB_TOKEN: ${{ secrets.GH_PAT  }}
+            TAG_FROM_PUBLISH: ${{ needs.publish.outputs.parsed_tag }}
           run: |
             ls -la
             BRANCH_NAME="auto-update/upgrade-responder-$(date +%Y%m%d%H%M%S)"
@@ -87,7 +88,7 @@ jobs:
             git add .github/upgrade-responder.json
             git commit -m "Automated commit by GitHub Actions"
             git push origin "$BRANCH_NAME"
-            gh pr create --base main --head "$BRANCH_NAME" --title "Automated: Update upgrade-responder.json" --body "This PR updates the \`upgrade-responder.json\` file with the latest version information, generated automatically by GitHub Actions."
+            gh pr create --base main --head "$BRANCH_NAME" --title "Automated: Update upgrade-responder.json to $TAG_FROM_PUBLISH" --body "This PR updates the \`upgrade-responder.json\` file with the version \`$TAG_FROM_PUBLISH\`, generated automatically by GitHub Actions."
 
         - name: Commit and push changes to external-production
           env:
@@ -101,7 +102,7 @@ jobs:
             git add upgrade-responder.json
             git commit -m "Automated commit by GitHub Actions"            
             git push origin "$BRANCH_NAME"
-            gh pr create --base main --head "$BRANCH_NAME" --title "Automated: Update upgrade-responder.json" --body "This PR updates the \`upgrade-responder.json\` file with the latest version information, generated automatically by GitHub Actions."
+            gh pr create --base main --head "$BRANCH_NAME" --title "Automated: Update upgrade-responder.json to $TAG_FROM_PUBLISH" --body "This PR updates the \`upgrade-responder.json\` file with the version \`$TAG_FROM_PUBLISH\`, generated automatically by GitHub Actions."
 
         #check
         #if not sucess (EXTERNAL) create automated issue for EIO priority 1
