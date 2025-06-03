@@ -93,6 +93,7 @@ jobs:
         - name: Commit and push changes to external-production
           env:
             GITHUB_TOKEN: ${{ secrets.GH_PAT  }}
+            TAG_FROM_PUBLISH: ${{ needs.publish.outputs.parsed_tag }}
           run: |
             BRANCH_NAME="auto-update/upgrade-responder-$(date +%Y%m%d%H%M%S)"
             echo "Creating and pushing branch: $BRANCH_NAME"
