@@ -30,8 +30,8 @@ jobs:
   update-upgrade-responder:
       needs: publish
       runs-on: ubuntu-latest
-      #permissions:
-        #contents: write
+      permissions:
+        contents: write
       steps:
         - uses: actions/checkout@v4
         - name: Checkout external-production repository
