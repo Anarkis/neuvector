@@ -37,8 +37,8 @@ jobs:
   update-upgrade-responder:
       needs: publish
       runs-on: ubuntu-latest
-      #permissions:
-        #contents: write
+      permissions:
+        contents: write
       env:
         TAG_FROM_PUBLISH: ${{ needs.publish.outputs.parsed_tag }}
         COMMIT_MESSAGE: "Automated commit by GitHub Actions"
