@@ -37,8 +37,9 @@ jobs:
   update-upgrade-responder:
       needs: publish
       runs-on: ubuntu-latest
-      #permissions:
-        #contents: write
+      permissions:
+        contents: write
+        pull-requests: write 
       env:
         TAG_FROM_PUBLISH: ${{ needs.publish.outputs.parsed_tag }}
         COMMIT_MESSAGE: "Automated commit by GitHub Actions"
@@ -69,8 +70,8 @@ jobs:
             git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
         - name: Commit and push changes to neuvector
-          #env:
-            #GH_TOKEN: ${{ secrets.GH_PAT }}
+          env:
+            GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           run: |
             BRANCH_NAME="${BRANCH_NAME_PREFIX}-$(date +%Y%m%d%H%M%S)"
             echo "Creating and pushing branch: $BRANCH_NAME"
