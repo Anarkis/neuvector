@@ -37,23 +37,15 @@ jobs:
   update-upgrade-responder:
       needs: publish
       runs-on: ubuntu-latest
-      permissions:
-        contents: write
+      #permissions:
+        #contents: write
       env:
         TAG_FROM_PUBLISH: ${{ needs.publish.outputs.parsed_tag }}
+        COMMIT_MESSAGE: "Automated commit by GitHub Actions"
+        BRANCH_NAME_PREFIX: "auto-update/upgrade-responder-"
+        GIT_PATH_EXTERNAL_PROD: "external-production/"
       steps:
         - uses: actions/checkout@v4
-        - name: Checkout external-production repository
-          uses: actions/checkout@v4
-          with:
-            #repository: rancher-eio/external-production
-            repository: anarkis/external-production
-            ref: main
-            token: ${{ secrets.GH_PAT }}
-            path: external-production
-            sparse-checkout: |
-              manifests/upgrade-responder/resources/ConfigMap/
-            sparse-checkout-cone-mode: true
 
         - name: Set up Python
           uses: actions/setup-python@v5
@@ -77,33 +69,14 @@ jobs:
             git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
         - name: Commit and push changes to neuvector
-          env:
-            GH_TOKEN: ${{ secrets.GH_PAT }}
+          #env:
+            #GH_TOKEN: ${{ secrets.GH_PAT }}
           run: |
-            ls -la
-            BRANCH_NAME="auto-update/upgrade-responder-$(date +%Y%m%d%H%M%S)"
+            BRANCH_NAME="${BRANCH_NAME_PREFIX}-$(date +%Y%m%d%H%M%S)"
             echo "Creating and pushing branch: $BRANCH_NAME"
             git checkout -b "$BRANCH_NAME"
             git add .github/upgrade-responder.json
-            git commit -m "Automated commit by GitHub Actions"
+            git commit -m  "${COMMIT_MESSAGE}"
             git push origin "$BRANCH_NAME"
             gh pr create --base main --head "$BRANCH_NAME" --title "Automated: Update upgrade-responder.json to $TAG_FROM_PUBLISH" --body "This PR updates the \`upgrade-responder.json\` file with the version \`$TAG_FROM_PUBLISH\`, generated automatically by GitHub Actions."
 
-        - name: Commit and push changes to external-production
-          env:
-            GITHUB_TOKEN: ${{ secrets.GH_PAT }}
-          run: |
-            BRANCH_NAME="auto-update/upgrade-responder-$(date +%Y%m%d%H%M%S)"
-            echo "Creating and pushing branch: $BRANCH_NAME"
-            cp .github/upgrade-responder.json external-production/ 
-            cd external-production/
-            git checkout -b "$BRANCH_NAME"
-            git add upgrade-responder.json
-            git commit -m "Automated commit by GitHub Actions"            
-            git push origin "$BRANCH_NAME"
-            gh pr create --base main --head "$BRANCH_NAME" --title "Automated: Update upgrade-responder.json to $TAG_FROM_PUBLISH" --body "This PR updates the \`upgrade-responder.json\` file with the version \`$TAG_FROM_PUBLISH\`, generated automatically by GitHub Actions."
-
-        #check
-        #if not sucess (EXTERNAL) create automated issue for EIO priority 1
-
-        
